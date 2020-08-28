@@ -1,10 +1,12 @@
 const axios = require("axios");
+const projectModel = require('../../models/projectModel');
 
 class projectController {
     constructor(req, res) {
         this.req = req;
         this.res = res;
 
+        this.model = new projectModel();
         this.data = [];
     }
 
@@ -14,12 +16,14 @@ class projectController {
         try {
             const response = await axios.get(host);
             this.data = response.data;
+
+            var listProjects = this.model.list();
         }
         catch (e) {
             console.log('Error in Project reading: ' + e);
         }
         finally {
-            return this.res.json({ project: this.data });
+            return this.res.json({ project: this.data, projetos: listProjects });
         }
     }
 }
