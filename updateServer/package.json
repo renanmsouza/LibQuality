@@ -1,0 +1,17 @@
+{
+  "name": "updateserver",
+  "version": "1.0.0",
+  "description": "Update data server",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "author": "Renan M. Souza",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.20.0",
+    "consign": "^0.1.6",
+    "express": "^4.17.1"
+  }
+}
