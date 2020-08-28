@@ -10,9 +10,13 @@ class ownerModel {
     }
 
     list () {
-        const query = this.db.run('Select * from Owners');
-
-        return query;
+        this.db.run("SELECT * FROM Owners", (err, rows) => {
+            if(!err) {
+                return rows;
+            }else{
+                return err;
+            }
+        });
     }
 
     get (id) {
@@ -25,23 +29,27 @@ class ownerModel {
 
     set (owner) {
         const query = this.db.run('Update Owners set name = $name,'+
-            ' avatar = $avatar, url = $url'+
-            ' where idOwner = $id'
+            ' avatar = $avatar, url = $url, type = $type'+
+            ' where idOwners = $idOwners'
         ,{
-            $id: owner.id,
+            $idOwners: owner.idOwners,
             $name: owner.name,
             $avatar: owner.avatar,
             $url: owner.url,
+            $type: owner.type
         });
 
         return query;
     }
 
     post (owner) {
-        const query = this.db.run('Insert Into Owners Values($name, $avatar, $url)',{
+        console.log(owner);
+        const query = this.db.run('INSERT INTO Owners VALUES($idOwners, $name, $avatar, $url, $type)',{
+            $idOwners: owner.idOwners,
             $name: owner.name,
             $avatar: owner.avatar,
             $url: owner.url,
+            $type: owner.type
         });
 
         return query;
