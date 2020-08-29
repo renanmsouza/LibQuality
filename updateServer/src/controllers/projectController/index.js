@@ -6,36 +6,37 @@ class projectController {
     constructor(req, res) {
         this.req = req;
         this.res = res;
+        this.data = [];
 
         this.Projects = new projectModel();
         this.Owners = new ownerModel();
-        this.data = [];
     }
 
-    async project(name, owner) {
-        const host = `https://api.github.com/repos/${owner}/${name}`;
-        
+    async setProject() {
+        //Get Project name and Owner from URL Query
+        const { project, owner } = this.req.query;
+        const host = `https://api.github.com/repos/${owner}/${project}`;
+
         try {
             const response = await axios.get(host);
             this.data = response.data;
-
-            var listProjects = this.Projects.list();
-            var listOwners = this.Owners.list();
         }
         catch (e) {
             console.log('Error in Project reading: ' + e);
         }
-        finally {
+        finally{
             // Post or Update Owner //
             this.updateOwner(this.data.owner);
             // Post or Update Project //
-            // this.updateProject(this.data);
-            
+            this.updateProject(this.data);
+
+            const listProjects = await this.Projects.list();
+            const listOwners = await this.Owners.list();
             return this.res.json({ listProjects, listOwners });
-        }
+        } 
     }
 
-    updateOwner(ownerData) {
+    async updateOwner(ownerData) {
         // Create the new Object
         var newOwner = {
             idOwners: ownerData.id,
@@ -46,18 +47,18 @@ class projectController {
         };
 
         // Check if alread exists, if not, create a new one
-        var oldOwner = this.Owners.get(ownerData.id);
+        const oldOwner = await this.Owners.get(ownerData.id) || [];
         if (oldOwner.idOwners) {
             // if Exists and is diferente, make an update
             if (oldOwner !== newOwner) {
-                this.Owners.set(newOwner)
+                await this.Owners.set(newOwner)
             }
         }else{
-            this.Owners.post(newOwner);
+            await this.Owners.post(newOwner);
         }
     }
 
-    updateProject(projectData) {
+    async updateProject(projectData) {
         // Create the new Object
         var newProject = {
             idProjects: projectData.id,
@@ -68,14 +69,14 @@ class projectController {
         };
 
         // Check if alread exists, if not, create a new one
-        var oldProject = this.Owners.get(projectData.id);
+        const oldProject = await this.Owners.get(projectData.id) || [];
         if (oldProject.idProjects) {
             // if Exists and is diferente, make an update
             if (oldProject !== newProject) {
-                this.Projects.set(newProject)
+                await this.Projects.set(newProject)
             }
         }else{
-            this.Projects.post(newProject);
+            await this.Projects.post(newProject);
         }
     }
 }

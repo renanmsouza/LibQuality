@@ -107,7 +107,7 @@ CREATE TABLE Issues (
   state VARCHAR(20) NULL,
   created_at DATETIME NULL,
   updated_at DATETIME NULL,
-  closed_ad DATETIME NULL,
+  closed_at DATETIME NULL,
   PRIMARY KEY(idIssues),
   FOREIGN KEY(idProjects)
     REFERENCES Projects(idProjects)

@@ -1,6 +1,6 @@
 const sqlite3 = require('sqlite3').verbose();
 
-class ownerModel {
+class issueModel {
     constructor() {
         this.db = new sqlite3.Database('../database/libquality.sqlite3', (err) => {
             if (err) {
@@ -11,7 +11,7 @@ class ownerModel {
 
     list () {
         return new Promise ((resolve, reject) => {
-            this.db.all('Select * from Owners', [] , (err, rows) => {
+            this.db.all('Select * from Issues', [] , (err, rows) => {
                 if (err) {
                     reject(err);
                 }else{
@@ -24,7 +24,7 @@ class ownerModel {
 
     get(id) {
         return new Promise ((resolve, reject) => {
-            this.db.get('Select * from Owners where idOwners = $id', { $id: id } ,(err, row) => {
+            this.db.get('Select * from Issues where idIssues = $id', { $id: id } ,(err, row) => {
                 if (err) {
                     reject(err);
                 }else{
@@ -35,17 +35,20 @@ class ownerModel {
         
     }
 
-    set (owner) {
+    set (obj) {
         return new Promise((resolve, reject) => {
-            this.db.run('Update Owners set name = $name,'+
-            ' avatar = $avatar, url = $url, type = $type'+
-            ' where idOwners = $idOwners'
+            this.db.run('Update Issues set url = $url,'+
+            ' title = $title, state = $state, created_at = $created_at,'+
+            ' updated_at = $updated_at, closed_at = $closed_at'+
+            ' where idIssues = $idIssues'
             ,{
-                $idOwners: owner.idOwners,
-                $name: owner.name,
-                $avatar: owner.avatar,
-                $url: owner.url,
-                $type: owner.type
+                $url: obj.url,
+                $title: obj.title,
+                $state: obj.state,
+                $created_at: obj.created_at,
+                $updated_at: obj.updated_at,
+                $closed_at: obj.closed_at   
+
             }, (RunResult, err) => {
                 if (err) {
                     reject(err);
@@ -56,14 +59,16 @@ class ownerModel {
         })
     }
 
-    post (owner) {
+    post (obj) {
         return new Promise ((resolve, reject) => {
-            this.db.run('Insert Into Owners Values($idOwners, $name, $avatar, $url, $type)',{
-                $idOwners: owner.idOwners,
-                $name: owner.name,
-                $avatar: owner.avatar,
-                $url: owner.url,
-                $type: owner.type
+            this.db.run('Insert Into Issues Values($idIssues, $url, $title, $state, $created_at, $updated_at, $closed_at)',{
+                $idIssues: obj.idIssues,
+                $url: obj.url,
+                $title: obj.title,
+                $state: obj.state,
+                $created_at: obj.created_at,
+                $updated_at: obj.updated_at,
+                $closed_at: obj.closed_at  
             }, (RunResult, err) => {
                 if (err) {
                     reject(err);
@@ -76,7 +81,7 @@ class ownerModel {
 
     del (id) {
         return new Promise ((resolve, reject) => {
-            this.db.run('Delete from Owners where idOwners = $id',{
+            this.db.run('Delete from Issues where idIssues = $id',{
                 $id: id
             }, (RunResult, err) => {
                 if (err) {
@@ -90,4 +95,4 @@ class ownerModel {
     }
 }
 
-module.exports = ownerModel;
+module.exports = issueModel;
