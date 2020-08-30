@@ -61,8 +61,9 @@ class issueModel {
 
     post (obj) {
         return new Promise ((resolve, reject) => {
-            this.db.run('Insert Into Issues Values($idIssues, $url, $title, $state, $created_at, $updated_at, $closed_at)',{
+            this.db.run('Insert Into Issues Values($idIssues, $idProjects, $url, $title, $state, $created_at, $updated_at, $closed_at)',{
                 $idIssues: obj.idIssues,
+                $idProjects: obj.idProjects,
                 $url: obj.url,
                 $title: obj.title,
                 $state: obj.state,
@@ -74,6 +75,7 @@ class issueModel {
                     reject(err);
                 }else{
                     resolve(RunResult);
+                    console.log(RunResult);
                 }     
             });
         })
@@ -92,6 +94,50 @@ class issueModel {
             });
         })
         
+    }
+
+    listLabels (idIssues) {
+        return new Promise((resolve, reject) => {
+            this.db.all('Select * from IssuesLabels Where idIssues = $idIssues',{
+                $idIssues: idIssues
+            }, (err, rows) => {
+                if (err) {
+                    reject(err);
+                }else{
+                    resolve(rows);
+                }       
+            });
+        })
+    }
+
+    postLabel (idIssues, idLabels) {
+        return new Promise((resolve, reject) => {
+            this.db.run('Insert into IssuesLabels Values($idIssues, $idLabels)',{
+                $idIssues: idIssues,
+                $idLabels: idLabels
+            }, (RunResult, err) => {
+                if (err) {
+                    reject(err);
+                }else{
+                    resolve(RunResult);
+                }       
+            });
+        })
+    }
+
+    delLabel (idIssues, idLabels) {
+        return new Promise((resolve, reject) => {
+            this.db.run('Delte from IssuesLabels Where idIssues = $idIssues and idLabels = $idLabels)',{
+                $idIssues: idIssues,
+                $idLabels: idLabels
+            }, (RunResult, err) => {
+                if (err) {
+                    reject(err);
+                }else{
+                    resolve(RunResult);
+                }       
+            });
+        })
     }
 }
 
