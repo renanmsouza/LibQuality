@@ -13,6 +13,7 @@
     "axios": "^0.20.0",
     "consign": "^0.1.6",
     "express": "^4.17.1",
+    "parse-link-header": "^1.0.1",
     "sqlite3": "^5.0.0"
   }
 }

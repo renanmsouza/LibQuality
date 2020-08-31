@@ -1,4 +1,5 @@
 const sqlite3 = require('sqlite3').verbose();
+const dtb = new sqlite3.Database('../database/libquality.sqlite3');
 
 class issueModel {
     constructor() {
@@ -61,7 +62,8 @@ class issueModel {
 
     post (obj) {
         return new Promise ((resolve, reject) => {
-            this.db.run('Insert Into Issues Values($idIssues, $idProjects, $url, $title, $state, $created_at, $updated_at, $closed_at)',{
+            this.db.run('begin transaction;'); 
+            this.db.run('Insert or Replace Into Issues Values($idIssues, $idProjects, $url, $title, $state, $created_at, $updated_at, $closed_at);',{
                 $idIssues: obj.idIssues,
                 $idProjects: obj.idProjects,
                 $url: obj.url,
@@ -70,14 +72,14 @@ class issueModel {
                 $created_at: obj.created_at,
                 $updated_at: obj.updated_at,
                 $closed_at: obj.closed_at  
-            }, (RunResult, err) => {
-                if (err) {
-                    reject(err);
-                }else{
-                    resolve(RunResult);
-                    console.log(RunResult);
-                }     
             });
+            this.db.run('end;', (RunResult, err) => {
+            if (err) {
+                reject(err);
+            }else{
+                resolve(RunResult);
+            }     
+            })
         })
     }
 

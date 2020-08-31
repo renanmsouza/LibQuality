@@ -19,7 +19,6 @@ class projectModel {
                 }  
             });
         })
-        
     }
 
     get (id) {
@@ -32,7 +31,6 @@ class projectModel {
                 }          
             });
         })
-        
     }
 
     set (project) {
@@ -54,8 +52,6 @@ class projectModel {
                 }     
             });
         })
-        
-
     }
 
     post (project) {
@@ -74,7 +70,6 @@ class projectModel {
                 }     
             });
         })
-        
     }
 
     del (id) {
@@ -89,8 +84,18 @@ class projectModel {
                 }     
             });
         })
-        
+    }
 
+    listProjectIssues(id) {
+        return new Promise ((resolve, reject) => {
+            this.db.all('Select * from Issues Where idProjects = $id', { $id: id } , (err, rows) => {
+                if (err) {
+                    reject(err);
+                }else{
+                    resolve(rows);
+                }  
+            });
+        })
     }
 }
 

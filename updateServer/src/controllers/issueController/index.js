@@ -1,7 +1,10 @@
 const axios = require('axios');
+var parseLink = require('parse-link-header');
+
 const projectModel = require('../../models/projectModel');
 const ownerModel = require('../../models/ownerModel');
 const issueModel = require('../../models/issueModel');
+const authenticationModel = require('../../models/authenticationModel');
 
 class issueController {
     constructor(req, res) {
@@ -9,24 +12,47 @@ class issueController {
         this.res = res;
         this.data = [];
 
+        this.Authentication = new authenticationModel();
         this.Projects = new projectModel();
         this.Owners = new ownerModel();
         this.Issues = new issueModel();
     }
 
     async setIssues() {
+        const gitAuth = await this.Authentication.get();
         const projectsList = await this.Projects.list();
+
         // Access all projects and update Issues information
         for (let i = 0; i < projectsList.length; i++) {
             //Set current project
             let project = projectsList[i];
             //Get the owner of current project
             const owner = await this.Owners.get(project.idOwners);
-            //Set Host
-            const host = `https://api.github.com/repos/${owner.name}/${project.name}/issues`;
+            //Set Conection Options
             try {
-                const response = await axios.get(host);
-                this.data = response.data;
+                var lastPage = 2;
+                var page = 1;
+                do {
+                    const response = await axios({
+                        method: 'get',
+                        url: `https://api.github.com/repos/${owner.name}/${project.name}/issues?page=${page}&per_page=100`,
+                        headers: { accept: 'application/vnd.github.v3+json' },
+                        auth: {
+                            username: gitAuth.gitUser,
+                            password: gitAuth.gitPassword
+                        }
+                    });
+                    this.data = this.data.concat(response.data);
+
+                    if (page === 1) {
+                        const parsedLink = parseLink(response.headers.link);
+                        lastPage = parsedLink.last.page;
+                    }
+
+                    console.log(page+'/'+lastPage);
+                    
+                    page++;
+                } while(page <= 1);
             }
             catch (e) {
                 console.log(`Error in Issues reading of project ${project.name}:` + e);
@@ -39,8 +65,10 @@ class issueController {
                     this.updateIssue(issuesList[j], project.idProjects);
                     this.updateLabels(issuesList[j]);
                 }
-            } 
+            }
+            
         };
+        
         const listIssues = await this.Issues.list();
         return this.res.json({ listIssues });
     }
