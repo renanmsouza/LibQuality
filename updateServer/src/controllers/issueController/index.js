@@ -59,6 +59,7 @@ class issueController {
                     page++;
                 } while(page <= 10);
                 // For performance reasons, i'll work with the 10 firsts pages
+                // Change the 10 for lastPage to get the full reading (Abaut 10min just for the React project)
                 // } while(page <= lastPage);
             }
             catch (err) {
