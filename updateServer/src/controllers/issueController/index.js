@@ -61,8 +61,8 @@ class issueController {
                 // For performance reasons, i'll work with the 10 firsts pages
                 // } while(page <= lastPage);
             }
-            catch (e) {
-                console.log(`Error in Issues reading of project ${project.name}:` + e);
+            catch (err) {
+                console.log(`Error in Issues reading of project ${project.name}:` + err);
             }
             finally{
                 const issuesList = this.data;
