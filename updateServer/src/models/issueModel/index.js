@@ -37,14 +37,16 @@ class issueModel {
 
     set (obj) {
         return new Promise((resolve, reject) => {
-            this.db.run('Update Issues set url = $url,'+
+            this.db.run('Update Issues set number = $number, url = $url,'+
             ' title = $title, state = $state, created_at = $created_at,'+
-            ' updated_at = $updated_at, closed_at = $closed_at'+
+            ' locked = $locked, updated_at = $updated_at, closed_at = $closed_at'+
             ' where idIssues = $idIssues'
             ,{
+                $number: obj.number,
                 $url: obj.url,
                 $title: obj.title,
                 $state: obj.state,
+                locked: obj.locked,
                 $created_at: obj.created_at,
                 $updated_at: obj.updated_at,
                 $closed_at: obj.closed_at   
@@ -64,12 +66,15 @@ class issueModel {
             this.db.run('begin transaction;'); 
             for (let i = 0; i < objs.length; i++) {
                 let obj = objs[i];
-                this.db.run('Insert or Replace Into Issues Values($idIssues, $idProjects, $url, $title, $state, $created_at, $updated_at, $closed_at);',{
+                this.db.run('Insert or Replace Into Issues Values($idIssues, $idProjects, $number, $url,'+ 
+                        '$title, $state, $locked, $created_at, $updated_at, $closed_at);',{
                     $idIssues: obj.idIssues,
                     $idProjects: obj.idProjects,
+                    $number: obj.number,
                     $url: obj.url,
                     $title: obj.title,
                     $state: obj.state,
+                    $locked: obj.locked,
                     $created_at: obj.created_at,
                     $updated_at: obj.updated_at,
                     $closed_at: obj.closed_at  

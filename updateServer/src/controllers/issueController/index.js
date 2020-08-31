@@ -33,12 +33,13 @@ class issueController {
             const owner = await this.Owners.get(project.idOwners);
             //Set Conection Options
             try {
+                // Temporary lastPage value.
                 var lastPage = 2;
                 var page = 1;
                 do {
                     const response = await axios({
                         method: 'get',
-                        url: `https://api.github.com/repos/${owner.name}/${project.name}/issues?page=${page}&per_page=100`,
+                        url: `https://api.github.com/repos/${owner.name}/${project.name}/issues?page=${page}&per_page=100&state=all`,
                         headers: { accept: 'application/vnd.github.v3+json' },
                         auth: {
                             username: gitAuth.gitUser,
@@ -49,11 +50,16 @@ class issueController {
 
                     if (page === 1) {
                         const parsedLink = parseLink(response.headers.link);
+                        // Real last page value from Headers
                         lastPage = parsedLink.last.page;
                     }
+
+                    console.log(page + '/' + lastPage);
             
                     page++;
-                } while(page <= lastPage);
+                } while(page <= 10);
+                // For performance reasons, i'll work with the 10 firsts pages
+                // } while(page <= lastPage);
             }
             catch (e) {
                 console.log(`Error in Issues reading of project ${project.name}:` + e);
@@ -89,10 +95,12 @@ class issueController {
         // Post or Update Issue
         var newIssue = {
             idIssues: issueData.id, 
-            idProjects: idProjects, 
+            idProjects: idProjects,
+            number: issueData.number, 
             url: issueData.url, 
             title: issueData.title, 
-            state: issueData.state, 
+            state: issueData.state,
+            locked: issueData.locked, 
             created_at: issueData.created_at, 
             updated_at: issueData.updated_at, 
             closed_at: issueData.closed_at

@@ -1,12 +1,3 @@
-CREATE TABLE Labels (
-  idLabels INTEGER NOT NULL,
-  url VARCHAR(250) NULL,
-  name VARCHAR(200) NULL,
-  color VARCHAR(20) NULL,
-  description VARCHAR(250) NULL,
-  PRIMARY KEY(idLabels)
-);
-
 CREATE TABLE Owners (
   idOwners INTEGER NOT NULL,
   name VARCHAR(200) NULL,
@@ -99,12 +90,28 @@ CREATE TABLE Forks (
       ON UPDATE NO ACTION
 );
 
+CREATE TABLE Labels (
+  idLabels INTEGER NOT NULL,
+  idProjects INTEGER NOT NULL,
+  url VARCHAR(250) NULL,
+  name VARCHAR(200) NULL,
+  color VARCHAR(20) NULL,
+  description VARCHAR(250) NULL,
+  PRIMARY KEY(idLabels),
+  FOREIGN KEY(idProjects)
+    REFERENCES Projects(idProjects)
+      ON DELETE CASCADE
+      ON UPDATE NO ACTION
+);
+
 CREATE TABLE Issues (
   idIssues INTEGER NOT NULL,
   idProjects INTEGER NOT NULL,
+  number INTEGER NULL,
   url VARCHAR(250) NULL,
   title VARCHAR(250) NULL,
   state VARCHAR(20) NULL,
+  locked BOOL NULL,
   created_at DATETIME NULL,
   updated_at DATETIME NULL,
   closed_at DATETIME NULL,
@@ -150,6 +157,7 @@ CREATE INDEX Stars_Project ON Stars(idProjects);
 CREATE INDEX Statistics_Project ON Statistics(idProjects);
 CREATE INDEX AccessLog_User ON AccessLog(idUsers);
 CREATE INDEX Forks_Project ON Forks(idProjects);
+CREATE INDEX Labels_Project ON Labels(idProjects);
 CREATE INDEX Issues_Project ON Issues(idProjects);
 CREATE INDEX IssuesLabels_Issue ON IssuesLabels(idIssues);
 CREATE INDEX IssuesLabels_Label ON IssuesLabels(idLabels);

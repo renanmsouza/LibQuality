@@ -18,4 +18,8 @@ module.exports = function(app) {
         const label = new labelController(req, res);
         label.setLabels();
     })
+
+    app.get('/', function(req, res) {
+        res.json({ API: 'UpdateServer' });
+    })
 }
