@@ -1,5 +1,5 @@
 const axios = require('axios');
-var parseLink = require('parse-link-header');
+const parseLink = require('parse-link-header');
 
 const projectModel = require('../../models/projectModel');
 const ownerModel = require('../../models/ownerModel');
@@ -11,6 +11,9 @@ class issueController {
         this.req = req;
         this.res = res;
         this.data = [];
+        //Using Insert list for beter performance
+        this.postIssuesList = [];
+        this.postLabelsList = [];
 
         this.Authentication = new authenticationModel();
         this.Projects = new projectModel();
@@ -48,11 +51,9 @@ class issueController {
                         const parsedLink = parseLink(response.headers.link);
                         lastPage = parsedLink.last.page;
                     }
-
-                    console.log(page+'/'+lastPage);
-                    
+            
                     page++;
-                } while(page <= 1);
+                } while(page <= lastPage);
             }
             catch (e) {
                 console.log(`Error in Issues reading of project ${project.name}:` + e);
@@ -62,15 +63,26 @@ class issueController {
 
                 // Map all issues data updating or creating them
                 for (let j = 0; j < issuesList.length; j++) {
-                    this.updateIssue(issuesList[j], project.idProjects);
-                    this.updateLabels(issuesList[j]);
+                    //Mount the Insert list for Issue
+                    var resultIssue = await this.updateIssue(issuesList[j], project.idProjects);
+                    this.postIssuesList = this.postIssuesList.concat(resultIssue);
+
+                    //Mount Insert List for Issues Labels
+                    var resultLabel = await this.updateLabels(issuesList[j]);
+                    if (resultLabel) {
+                        this.postLabelsList = this.postLabelsList.concat(resultLabel);
+                    }
                 }
             }
             
         };
+
+        //Execute Insert of the Lists: Issues and Labels of Issues
+        await this.Issues.post(this.postIssuesList)
+            .then(await this.Issues.postLabel(this.postLabelsList));
         
-        const listIssues = await this.Issues.list();
-        return this.res.json({ listIssues });
+        // const listIssues = await this.Issues.list();
+        return this.res.json({ Page: 'Issues' });
     }
 
     async updateIssue(issueData, idProjects) {
@@ -86,15 +98,18 @@ class issueController {
             closed_at: issueData.closed_at
         };
 
-        // Check if alread exists, if not, create a new one
+        // Check if alread exists, if not, put then in the Insert List
         const oldIssue = await this.Issues.get(issueData.id) || [];
         if (oldIssue.idIssues) {
             // if Exists and is diferente, make an update
             if (oldIssue !== newIssue) {
                 await this.Issues.set(newIssue)
             }
+
+            return [];
         }else{
-            await this.Issues.post(newIssue);
+            // await this.Issues.post(newIssue);
+            return newIssue;
         }
     }
 
@@ -104,17 +119,6 @@ class issueController {
         //Get the list os Labels in DB
         const oldListLabels = await this.Issues.listLabels(issueData.id);
 
-        //Verify the labels existence in DB, post them if necessary
-        for (let i = 0; i < newListLabels.length; i++) {
-            let found = oldListLabels.some(function (oldLabel) {
-                return oldLabel.idLabels === newListLabels[i].id;
-            });
-
-            if (!found) {
-                this.Issues.postLabel(issueData.id, newListLabels[i].id);
-            }
-        }
-
         //Verify if same Labels are removed from API, deleting them fom DB
         for (let i = 0; i < oldListLabels.length; i++) {
             let found = newListLabels.some(function (newLabel) {
@@ -122,7 +126,18 @@ class issueController {
             });
 
             if (!found) {
-                this.Issues.delLabel(issueData.id, oldListLabels[i].idLabels);
+                await this.Issues.delLabel(issueData.id, oldListLabels[i].idLabels);
+            }
+        }
+
+        //Verify the labels existence in DB or put them in the Insert List
+        for (let i = 0; i < newListLabels.length; i++) {
+            let found = oldListLabels.some(function (oldLabel) {
+                return oldLabel.idLabels === newListLabels[i].id;
+            });
+
+            if (!found) {
+                return { idIssues: issueData.id, idLabels: newListLabels[i].id }
             }
         }
     }

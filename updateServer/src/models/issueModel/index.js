@@ -1,5 +1,4 @@
 const sqlite3 = require('sqlite3').verbose();
-const dtb = new sqlite3.Database('../database/libquality.sqlite3');
 
 class issueModel {
     constructor() {
@@ -60,26 +59,29 @@ class issueModel {
         })
     }
 
-    post (obj) {
+    post (objs) {
         return new Promise ((resolve, reject) => {
             this.db.run('begin transaction;'); 
-            this.db.run('Insert or Replace Into Issues Values($idIssues, $idProjects, $url, $title, $state, $created_at, $updated_at, $closed_at);',{
-                $idIssues: obj.idIssues,
-                $idProjects: obj.idProjects,
-                $url: obj.url,
-                $title: obj.title,
-                $state: obj.state,
-                $created_at: obj.created_at,
-                $updated_at: obj.updated_at,
-                $closed_at: obj.closed_at  
-            });
+            for (let i = 0; i < objs.length; i++) {
+                let obj = objs[i];
+                this.db.run('Insert or Replace Into Issues Values($idIssues, $idProjects, $url, $title, $state, $created_at, $updated_at, $closed_at);',{
+                    $idIssues: obj.idIssues,
+                    $idProjects: obj.idProjects,
+                    $url: obj.url,
+                    $title: obj.title,
+                    $state: obj.state,
+                    $created_at: obj.created_at,
+                    $updated_at: obj.updated_at,
+                    $closed_at: obj.closed_at  
+                });
+            }
             this.db.run('end;', (RunResult, err) => {
-            if (err) {
-                reject(err);
-            }else{
-                resolve(RunResult);
-            }     
-            })
+                if (err) {
+                    reject(err);
+                }else{
+                    resolve(RunResult);
+                }     
+            });
         })
     }
 
@@ -112,17 +114,22 @@ class issueModel {
         })
     }
 
-    postLabel (idIssues, idLabels) {
+    postLabel (labels) {
         return new Promise((resolve, reject) => {
-            this.db.run('Insert into IssuesLabels Values($idIssues, $idLabels)',{
-                $idIssues: idIssues,
-                $idLabels: idLabels
-            }, (RunResult, err) => {
+            this.db.run('begin transaction;'); 
+            for(let i = 0; i < labels.length; i++) {
+                let { idIssues, idLabels } = labels[i];
+                this.db.run('Insert into IssuesLabels Values($idIssues, $idLabels)',{
+                    $idIssues: idIssues,
+                    $idLabels: idLabels
+                });
+            }
+            this.db.run('end;', (RunResult, err) => {
                 if (err) {
                     reject(err);
                 }else{
                     resolve(RunResult);
-                }       
+                }     
             });
         })
     }
