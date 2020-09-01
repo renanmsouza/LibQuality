@@ -46,11 +46,11 @@ class ownerModel {
                 $avatar: owner.avatar,
                 $url: owner.url,
                 $type: owner.type
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })
@@ -64,11 +64,11 @@ class ownerModel {
                 $avatar: owner.avatar,
                 $url: owner.url,
                 $type: owner.type
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })
@@ -78,12 +78,12 @@ class ownerModel {
         return new Promise ((resolve, reject) => {
             this.db.run('Delete from Owners where idOwners = $id',{
                 $id: id
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
-                }     
+                    resolve(true);
+                }    
             });
         })
         

@@ -51,12 +51,12 @@ class issueModel {
                 $updated_at: obj.updated_at,
                 $closed_at: obj.closed_at   
 
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
-                }     
+                    resolve(true);
+                }    
             });
         })
     }
@@ -94,11 +94,11 @@ class issueModel {
         return new Promise ((resolve, reject) => {
             this.db.run('Delete from Issues where idIssues = $id',{
                 $id: id
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })
@@ -129,12 +129,13 @@ class issueModel {
                     $idLabels: idLabels
                 });
             }
-            this.db.run('end;', (RunResult, err) => {
+            this.db.run('end;', 
+            (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
-                }     
+                    resolve(true);
+                }    
             });
         })
     }
@@ -144,11 +145,11 @@ class issueModel {
             this.db.run('Delte from IssuesLabels Where idIssues = $idIssues and idLabels = $idLabels)',{
                 $idIssues: idIssues,
                 $idLabels: idLabels
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }       
             });
         })

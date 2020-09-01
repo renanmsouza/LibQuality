@@ -40,11 +40,12 @@ class statisticModel {
                     $stdAge: obj.stdAge
                 });
             }
-            this.db.run('end;', (RunResult, err) => {
+            this.db.run('end;', 
+            (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })

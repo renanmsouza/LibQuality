@@ -60,7 +60,6 @@ class staticController {
 
         // Post the Calculated Statistics List
         const result = await this.Statistics.post(this.postList);
-        console.log(result);
     }
 }
 

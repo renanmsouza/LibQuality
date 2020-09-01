@@ -4,9 +4,7 @@ const projectModel = require('../../models/projectModel');
 const ownerModel = require('../../models/ownerModel');
 
 class labelController {
-    constructor(req, res) {
-        this.req = req;
-        this.res = res;
+    constructor() {
         this.data = [];
 
         this.Labels = new labelModel();
@@ -23,7 +21,7 @@ class labelController {
             //Get the owner of current project
             const owner = await this.Owners.get(project.idOwners);
             //Set Host
-            const host = `https://api.github.com/repos/${owner.name}/${project.name}/labels`;
+            const host = `https://api.github.com/repos/${owner.name}/${project.name}/labels?per_page=100`;
             try {
                 const response = await axios.get(host);
                 this.data = response.data;
@@ -40,9 +38,6 @@ class labelController {
                 }
             } 
         };
-        
-        const list = await this.Labels.list();
-        return this.res.json({ list });
     }
 
     async updateLabel(labelData, idProjects) {

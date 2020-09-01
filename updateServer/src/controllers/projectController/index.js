@@ -3,18 +3,16 @@ const projectModel = require('../../models/projectModel');
 const ownerModel = require('../../models/ownerModel');
 
 class projectController {
-    constructor(req, res) {
-        this.req = req;
-        this.res = res;
+    constructor() {
         this.data = [];
 
         this.Projects = new projectModel();
         this.Owners = new ownerModel();
     }
 
-    async setProject() {
+    async setProject(req, res) {
         //Get Project name and Owner from URL Query
-        const { project, owner } = this.req.query;
+        const { project, owner } = req.query;
         const host = `https://api.github.com/repos/${owner}/${project}`;
 
         try {
@@ -26,11 +24,9 @@ class projectController {
         }
         finally{
             // Post or Update Owner //
-            this.updateOwner(this.data.owner);
+            await this.updateOwner(this.data.owner);
             // Post or Update Project //
-            this.updateProject(this.data);
-
-            // return this.res.status(201).json({ result: 'success' });
+            await this.updateProject(this.data);
         } 
     }
 

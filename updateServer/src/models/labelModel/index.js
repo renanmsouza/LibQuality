@@ -46,12 +46,12 @@ class labelModel {
                 $color: obj.color,
                 $description: obj.description 
 
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
-                }     
+                    resolve(true);
+                }      
             });
         })
     }
@@ -65,12 +65,12 @@ class labelModel {
                 $name: obj.name,
                 $color: obj.color,
                 $description: obj.description
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
-                }     
+                    resolve(true);
+                }    
             });
         })
     }
@@ -79,11 +79,11 @@ class labelModel {
         return new Promise ((resolve, reject) => {
             this.db.run('Delete from Labels where idLabels = $id',{
                 $id: id
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })

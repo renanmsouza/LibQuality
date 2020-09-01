@@ -44,11 +44,11 @@ class projectModel {
                 $name: project.name,
                 $description: project.description,
                 $url: project.url
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })
@@ -62,11 +62,11 @@ class projectModel {
                 $name: project.name,
                 $description: project.description,
                 $url: project.url
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })
@@ -76,11 +76,11 @@ class projectModel {
         return new Promise ((resolve, reject) => {
             this.db.run('Delete from Projects where idProjects = $id',{
                 $id: id
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })

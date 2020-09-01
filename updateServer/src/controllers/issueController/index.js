@@ -7,9 +7,7 @@ const issueModel = require('../../models/issueModel');
 const authenticationModel = require('../../models/authenticationModel');
 
 class issueController {
-    constructor(req, res) {
-        this.req = req;
-        this.res = res;
+    constructor() {
         this.data = [];
         //Using Insert list for beter performance
         this.postIssuesList = [];
@@ -87,9 +85,6 @@ class issueController {
         //Execute Insert of the Lists: Issues and Labels of Issues
         await this.Issues.post(this.postIssuesList)
             .then(await this.Issues.postLabel(this.postLabelsList));
-        
-        // const listIssues = await this.Issues.list();
-        return this.res.json({ Page: 'Issues' });
     }
 
     async updateIssue(issueData, idProjects) {
