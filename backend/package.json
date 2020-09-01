@@ -10,6 +10,7 @@
   "author": "Renan M. Souza",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.20.0",
     "consign": "^0.1.6",
     "crypto-js": "^4.0.0",
     "express": "^4.17.1",

@@ -9,11 +9,11 @@ class userModel {
         });
     }
 
-    list () {
+    list() {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Users', [] , (err, rows) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
                     resolve(rows);
                 }  
@@ -26,7 +26,7 @@ class userModel {
         return new Promise ((resolve, reject) => {
             this.db.get('Select * from Users where idUsers = $id', { $id: id } ,(err, row) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
                     resolve(row);
                 }          
@@ -35,66 +35,66 @@ class userModel {
         
     }
 
-    set (obj) {
+    set(obj) {
         return new Promise((resolve, reject) => {
             this.db.run('Update Users set name = $name,'+
             ' login = $login, password = $password'+
             ' where idUsers = $idUsers'
             ,{
+                $idUsers: obj.idUsers,
                 $name: obj.name,
                 $login: obj.login,
                 $password: obj.password
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })
     }
 
-    post (obj) {
+    post(obj) {
         return new Promise ((resolve, reject) => {
             this.db.run('Insert Into Users Values(null, $name, $login, $password)',{
                 $name: obj.name,
                 $login: obj.login,
                 $password: obj.password
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })
     }
 
-    del (id) {
+    del(id) {
         return new Promise ((resolve, reject) => {
             this.db.run('Delete from Users where idUsers = $id',{
                 $id: id
-            }, (RunResult, err) => {
+            }, (err) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
-                    resolve(RunResult);
+                    resolve(true);
                 }     
             });
         })
         
     }
 
-    auth (user) {
+    auth(login) {
         return new Promise ((resolve, reject) => {
-            this.db.get('Select COUNT(*) as validuser from Users where login = $login and password = $password', 
+            this.db.get('Select * from Users where login = $login', 
                 { 
-                    $login: user.login,
-                    $password: user.password 
+                    $login: login,
                 },
                 (err, row) => {
                 if (err) {
-                    reject(err);
+                    reject({ error: err });
                 }else{
                     resolve(row);
                 }          

@@ -30,9 +30,7 @@ class projectController {
             // Post or Update Project //
             this.updateProject(this.data);
 
-            const listProjects = await this.Projects.list();
-            const listOwners = await this.Owners.list();
-            return this.res.json({ listProjects, listOwners });
+            return this.res.status(201).json({});
         } 
     }
 

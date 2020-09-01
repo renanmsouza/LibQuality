@@ -1,5 +1,5 @@
 const userModel = require('../../models/userModel');
-var crypto = require('crypto-js');
+var CryptoJS = require('crypto-js');
 
 class userController {
     constructor() {
@@ -8,7 +8,8 @@ class userController {
 
     async list(req, res) {
         const result = await this.Users.list();
-        if (result === null) {
+
+        if (!result.error) {
             res.status(200).json({ result: result });
         }else{
             res.status(400).json({ result: result});
@@ -17,14 +18,16 @@ class userController {
 
     async post(req, res) {
         const data = req.body;
+        console.log(data);
         var user = {
             name: data.name,
             login: data.login,
-            password: crypto.SHA256.encrypt(data.password, 'QualityLib').toString(),
+            password: CryptoJS.AES.encrypt(data.password, 'QualityLib').toString(),
         }
 
         const result = await this.Users.post(user);
-        if (result === null) {
+        
+        if (!result.error) {
             res.status(201).json({ result: 'success' });
         }else{
             res.status(400).json({ result: result});
@@ -44,9 +47,15 @@ class userController {
 
     async set(req, res) {
         const data = req.body;
+        var user = {
+            idUsers: data.idUsers,
+            name: data.name,
+            login: data.login,
+            password: CryptoJS.AES.encrypt(data.password, 'QualityLib').toString(),
+        }
 
-        const result = await this.Users.set(data);
-        if (result === null) {
+        const result = await this.Users.set(user);
+        if (!result.error) {
             res.status(201).json({ result: 'success' });
         }else{
             res.status(400).json({ result: result});
@@ -57,23 +66,27 @@ class userController {
         const id = req.params.id;
 
         const result = await this.Users.del(id);
-        if (result === null) {
+        if (!result.error) {
             res.status(200).json({ result: 'success' });
         }else{
             res.status(400).json({ result: result});
         }   
     }
 
-    async auth (req, res) {
+    async auth(req, res) {
         const data = req.body;
-        var user = {
-            login: data.login,
-            password: crypto.SHA256.encrypt(data.password, 'QualityLib').toString(),
-        }
 
-        const result = await this.Users.auth(user);
-        if (result.validuser >= 1) {
-            res.status(203).json({ result: 'success' });
+        const result = await this.Users.auth(data.login);
+        if (result.password) {
+            var hash = CryptoJS.AES.decrypt(result.password, 'QualityLib');
+            const password = hash.toString(CryptoJS.enc.Utf8);
+            
+            if (data.password === password) {
+                res.status(203).json({ result: 'success' });
+            }else{
+                res.status(401).json({ result: 'Invalid Password!' });
+            }
+            
         }else{
             res.status(401).json({ result: result});
         }
