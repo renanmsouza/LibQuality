@@ -26,7 +26,7 @@ class projectModel {
 
     search(query) {
         return new Promise ((resolve, reject) => {
-            this.db.all('Select * from Projects Where name Like %$str%', { $query: query } , (err, rows) => {
+            this.db.all('Select * from Projects Where name Like $query', { $query: '%'+query+'%' } , (err, rows) => {
                 if (err) {
                     reject({ error: err });
                 }else{
@@ -37,10 +37,11 @@ class projectModel {
     }
 
     searchLog(obj) {
+        console.log(obj);
         return new Promise ((resolve, reject) => {
             this.db.run('Insert Into SearchLog Values(null, $idUsers, $query, $date)',
             {
-                $idUsers: obj.name,
+                $idUsers: obj.idUsers,
                 $query: obj.query,
                 $date: obj.date
             }, 
@@ -54,18 +55,15 @@ class projectModel {
         })
     }
 
-    add(owner, project) {
-        return new Promise((resolve, reject) => {
-            const result = [];
-            
-            try {
-                result = api.get(`/projects?owner=${owner}&project=${project}`);    
-            } catch (err) {
-                reject(err);    
-            }finally{
-                resolve(result);
-            }
-        })
+    add(owner, project) {        
+        try {
+            const result = api.get(`/projects/add?owner=${owner}&project=${project}`);  
+            console.log(result);  
+        } catch (err) {
+            return err;    
+        }finally{
+            return result;
+        }
     }
 
     get(id) {

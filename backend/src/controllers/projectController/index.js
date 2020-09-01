@@ -21,10 +21,11 @@ class projectController {
         const result = await this.Projects.search(data.query);
         if (!result.error) {
             //Log record of the Search
+            var currentdate = new Date();
             var log = {
-                idUsers: req.session.currentUserId || 0,
+                idUsers: req.headers.currentuserid || 0,
                 query: data.query,
-                date: new Date()
+                date: currentdate.toISOString(),
             }
             await this.Projects.searchLog(log);
 

@@ -30,7 +30,7 @@ class projectController {
             // Post or Update Project //
             this.updateProject(this.data);
 
-            return this.res.status(201).json({});
+            // return this.res.status(201).json({ result: 'success' });
         } 
     }
 

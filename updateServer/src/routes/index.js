@@ -5,7 +5,7 @@ const statisticsController = require('../controllers/statisticController');
 
 module.exports = function(app) {
     //This route have Query parameters
-    app.get('/project', function(req, res) {
+    app.get('/projects/add', function(req, res) {
         const project = new projectController(req, res);
         project.setProject();
     })
