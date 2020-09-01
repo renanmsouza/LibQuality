@@ -21,7 +21,6 @@ class projectModel {
                 }  
             });
         })
-        
     }
 
     search(query) {
@@ -75,8 +74,7 @@ class projectModel {
                     resolve(row);
                 }          
             });
-        })
-        
+        }) 
     }
 
     del(id) {
