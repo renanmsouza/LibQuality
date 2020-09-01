@@ -101,6 +101,23 @@ class userModel {
             });
         })    
     }
+
+    accessLog(obj) {
+        return new Promise ((resolve, reject) => {
+            this.db.run('Insert Into AccessLog Values(null, $idUsers, $date)',
+            {
+                $idUsers: obj.idUsers,
+                $date: obj.date,
+            }, 
+            (err) => {
+                if (err) {
+                    reject({ error: err });
+                }else{
+                    resolve(true);
+                }     
+            });
+        })
+    }
 }
 
 module.exports = userModel;

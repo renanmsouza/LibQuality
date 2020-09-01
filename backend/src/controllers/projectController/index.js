@@ -6,9 +6,28 @@ class projectController {
     }
 
     async list(req, res) {
-        const result = await this.Users.list();
+        const result = await this.Projects.list();
 
         if (!result.error) {
+            res.status(200).json({ result: result });
+        }else{
+            res.status(400).json({ result: result});
+        }
+    }
+
+    async search(req, res) {
+        const data = req.body;
+
+        const result = await this.Projects.search(data.query);
+        if (!result.error) {
+            //Log record of the Search
+            var log = {
+                idUsers: req.session.currentUserId || 0,
+                query: data.query,
+                date: new Date()
+            }
+            await this.Projects.searchLog(log);
+
             res.status(200).json({ result: result });
         }else{
             res.status(400).json({ result: result});
@@ -30,8 +49,8 @@ class projectController {
     async get(req, res) {
         const id = req.params.id;
 
-        const result = await this.Users.get(id);
-        if (result === null) {
+        const result = await this.Projects.get(id);
+        if (!result.error) {
             res.status(200).json({ result: result });
         }else{
             res.status(400).json({ result: result});
@@ -42,7 +61,7 @@ class projectController {
     async del(req, res) {
         const id = req.params.id;
 
-        const result = await this.Users.del(id);
+        const result = await this.Projects.del(id);
         if (!result.error) {
             res.status(200).json({ result: 'success' });
         }else{

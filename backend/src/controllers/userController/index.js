@@ -38,7 +38,7 @@ class userController {
         const id = req.params.id;
 
         const result = await this.Users.get(id);
-        if (result === null) {
+        if (!result.error) {
             res.status(200).json({ result: result });
         }else{
             res.status(400).json({ result: result});
@@ -82,6 +82,17 @@ class userController {
             const password = hash.toString(CryptoJS.enc.Utf8);
             
             if (data.password === password) {
+                req.session.currentUserId = result.idUsers;
+                req.session.currentUser = result.name;
+
+                //Access Log
+                var currentDate = new Date();
+                var log = {
+                    idUsers: result.idUsers,
+                    date: currentDate.toISOString(),
+                }
+                await this.Users.accessLog(log);
+
                 res.status(203).json({ result: 'success' });
             }else{
                 res.status(401).json({ result: 'Invalid Password!' });

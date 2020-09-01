@@ -36,11 +36,12 @@ CREATE TABLE Projects (
 
 CREATE TABLE SearchLog (
   idSearchLog INTEGER PRIMARY KEY AUTOINCREMENT,
-  idProjects INTEGER NOT NULL,
+  idUsers INTEGER NOT NULL,
+  query VARCHAR(200) NULL,
   date DATE NULL,
   time TIME NULL,
-  FOREIGN KEY(idProjects)
-    REFERENCES Projects(idProjects)
+  FOREIGN KEY(idUsers)
+    REFERENCES Users(idUsers)
       ON DELETE NO ACTION
       ON UPDATE NO ACTION
 );
@@ -72,8 +73,7 @@ CREATE TABLE Statistics  (
 CREATE TABLE AccessLog (
   idAccessLog INTEGER PRIMARY KEY AUTOINCREMENT,
   idUsers INTEGER NOT NULL,
-  date DATE NULL,
-  time TIME NULL,
+  date DATETIME NULL,
   FOREIGN KEY(idUsers)
     REFERENCES Users(idUsers)
       ON DELETE NO ACTION
@@ -152,7 +152,7 @@ CREATE TABLE ProjectContributors (
 
 
 CREATE INDEX Projects_Owner ON Projects(idOwners);
-CREATE INDEX SearchLog_Project ON SearchLog(idProjects);
+CREATE INDEX SearchLog_Users ON SearchLog(idUsers);
 CREATE INDEX Stars_Project ON Stars(idProjects);
 CREATE INDEX Statistics_Project ON Statistics(idProjects);
 CREATE INDEX AccessLog_User ON AccessLog(idUsers);
