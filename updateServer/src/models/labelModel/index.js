@@ -38,7 +38,7 @@ class labelModel {
     set (obj) {
         return new Promise((resolve, reject) => {
             this.db.run('Update Labels set url = $url,'+
-            ' name = $name, color = $color, description = $description,'+
+            ' name = $name, color = $color, description = $description'+
             ' where idLabels = $idLabels'
             ,{
                 $url: obj.url,
@@ -48,7 +48,7 @@ class labelModel {
 
             }, (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err) // reject({ error: err });
                 }else{
                     resolve(true);
                 }      

@@ -18,6 +18,7 @@ class ownerModel {
                     resolve(rows);
                 }  
             });
+            
         })
         
     }
@@ -31,6 +32,7 @@ class ownerModel {
                     resolve(row);
                 }          
             });
+            
         })
         
     }
@@ -53,6 +55,7 @@ class ownerModel {
                     resolve(true);
                 }     
             });
+            
         })
     }
 
@@ -71,6 +74,7 @@ class ownerModel {
                     resolve(true);
                 }     
             });
+            
         })
     }
 
@@ -85,6 +89,7 @@ class ownerModel {
                     resolve(true);
                 }    
             });
+            
         })
         
     }

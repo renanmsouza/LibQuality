@@ -25,6 +25,9 @@ class issueController {
 
         // Access all projects and update Issues information
         for (let i = 0; i < projectsList.length; i++) {
+            //Empty Post lists
+            this.postIssuesList = [];
+            this.postLabelsList = [];
             //Set current project
             let project = projectsList[i];
             //Get the owner of current project
@@ -79,12 +82,12 @@ class issueController {
                     }
                 }
             }
+
+            //Execute Insert of the Lists: Issues and Labels of Issues
+            await this.Issues.post(this.postIssuesList)
+                .then(await this.Issues.postLabel(this.postLabelsList));
             
         };
-
-        //Execute Insert of the Lists: Issues and Labels of Issues
-        await this.Issues.post(this.postIssuesList)
-            .then(await this.Issues.postLabel(this.postLabelsList));
     }
 
     async updateIssue(issueData, idProjects) {

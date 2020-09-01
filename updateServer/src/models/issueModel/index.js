@@ -13,11 +13,12 @@ class issueModel {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Issues', [] , (err, rows) => {
                 if (err) {
-                    reject(err);
+                    console.log(err);
                 }else{
                     resolve(rows);
                 }  
             });
+            
         })
         
     }
@@ -26,11 +27,12 @@ class issueModel {
         return new Promise ((resolve, reject) => {
             this.db.get('Select * from Issues where idIssues = $id', { $id: id } ,(err, row) => {
                 if (err) {
-                    reject(err);
+                    console.log(err);
                 }else{
                     resolve(row);
                 }          
             });
+            
         })
         
     }
@@ -38,26 +40,28 @@ class issueModel {
     set (obj) {
         return new Promise((resolve, reject) => {
             this.db.run('Update Issues set number = $number, url = $url,'+
-            ' title = $title, state = $state, created_at = $created_at,'+
-            ' locked = $locked, updated_at = $updated_at, closed_at = $closed_at'+
+            ' title = $title, state = $state, locked = $locked, created_at = $created_at,'+
+            ' updated_at = $updated_at, closed_at = $closed_at'+
             ' where idIssues = $idIssues'
             ,{
+                $idIssues: obj.idIssues,
                 $number: obj.number,
                 $url: obj.url,
                 $title: obj.title,
                 $state: obj.state,
-                locked: obj.locked,
+                $locked: obj.locked,
                 $created_at: obj.created_at,
                 $updated_at: obj.updated_at,
                 $closed_at: obj.closed_at   
 
             }, (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log({ error: err });
                 }else{
                     resolve(true);
                 }    
             });
+            
         })
     }
 
@@ -82,11 +86,12 @@ class issueModel {
             }
             this.db.run('end;', (RunResult, err) => {
                 if (err) {
-                    reject(err);
+                    console.log(err);
                 }else{
                     resolve(RunResult);
                 }     
             });
+            
         })
     }
 
@@ -96,11 +101,12 @@ class issueModel {
                 $id: id
             }, (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log({ error: err });
                 }else{
                     resolve(true);
                 }     
             });
+            
         })
         
     }
@@ -111,11 +117,12 @@ class issueModel {
                 $idIssues: idIssues
             }, (err, rows) => {
                 if (err) {
-                    reject(err);
+                    console.log(err);
                 }else{
                     resolve(rows);
                 }       
             });
+            
         })
     }
 
@@ -124,6 +131,7 @@ class issueModel {
             this.db.run('begin transaction;'); 
             for(let i = 0; i < labels.length; i++) {
                 let { idIssues, idLabels } = labels[i];
+                // console.log(idIssues + '|' + idLabels);
                 this.db.run('Insert into IssuesLabels Values($idIssues, $idLabels)',{
                     $idIssues: idIssues,
                     $idLabels: idLabels
@@ -132,26 +140,29 @@ class issueModel {
             this.db.run('end;', 
             (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log({ error: err });
                 }else{
                     resolve(true);
                 }    
             });
+            
         })
     }
 
     delLabel (idIssues, idLabels) {
         return new Promise((resolve, reject) => {
-            this.db.run('Delte from IssuesLabels Where idIssues = $idIssues and idLabels = $idLabels)',{
+            this.db.run('Delete from IssuesLabels Where idIssues = $idIssues and idLabels = $idLabels',
+            {
                 $idIssues: idIssues,
                 $idLabels: idLabels
             }, (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log({ error: err });
                 }else{
                     resolve(true);
                 }       
             });
+            
         })
     }
 }

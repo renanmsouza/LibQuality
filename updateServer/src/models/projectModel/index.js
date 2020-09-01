@@ -18,6 +18,7 @@ class projectModel {
                     resolve(rows);
                 }  
             });
+            
         })
     }
 
@@ -30,6 +31,7 @@ class projectModel {
                     resolve(row);
                 }          
             });
+            
         })
     }
 
@@ -51,6 +53,7 @@ class projectModel {
                     resolve(true);
                 }     
             });
+            
         })
     }
 
@@ -69,6 +72,7 @@ class projectModel {
                     resolve(true);
                 }     
             });
+            
         })
     }
 
@@ -83,6 +87,7 @@ class projectModel {
                     resolve(true);
                 }     
             });
+            
         })
     }
 
@@ -95,6 +100,7 @@ class projectModel {
                     resolve(rows);
                 }  
             });
+            
         })
     }
 }

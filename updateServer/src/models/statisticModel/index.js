@@ -22,6 +22,7 @@ class statisticModel {
                     resolve(rows);
                 }  
             });
+            
         })
     }
 
@@ -48,6 +49,7 @@ class statisticModel {
                     resolve(true);
                 }     
             });
+            
         })
     }
 
@@ -65,6 +67,7 @@ class statisticModel {
                     resolve(row);
                 }          
             });
+            
         })
     }
 
@@ -72,13 +75,14 @@ class statisticModel {
         return new Promise ((resolve, reject) => {
             this.db.get('Select SUM((julianday(DATE(closed_at)) - julianday(DATE(created_at)))) as TotalGap, COUNT(*) as TotalRows'+
                 ' from Issues Where idProjects = $idProjects and state = "closed"', { $idProjects: idProjects },
-                (err, row) => {
-                    if (err) {
-                        reject(err);
-                    }else{
-                        resolve(row);
-                    }          
-                });
+            (err, row) => {
+                if (err) {
+                    reject(err);
+                }else{
+                    resolve(row);
+                }          
+            });
+            
         })
     }
 
@@ -86,13 +90,14 @@ class statisticModel {
         return new Promise ((resolve, reject) => {
             this.db.all('Select idIssues, ( julianday(DATE(closed_at)) - julianday(DATE(created_at)) ) as CloseGap'+
                 ' from Issues Where idProjects = $idProjects and state = "closed"', { $idProjects: idProjects }, 
-                (err, rows) => {
-                    if (err) {
-                        reject(err);
-                    }else{
-                        resolve(rows);
-                    }  
-                });
+            (err, rows) => {
+                if (err) {
+                    reject(err);
+                }else{
+                    resolve(rows);
+                }  
+            });
+            
         })
     }
 }

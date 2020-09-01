@@ -9,14 +9,23 @@ class serverController {
         this.Statistics = new statisticController();
     }
 
-    async updateServer() {
+    async updateServer(res) {
         await this.Labels.setLabels()
         .then(
             await this.Issues.setIssues()
         )
         .then(
             await this.Statistics.calcStatistics()
-        );
+        ).then(function() {
+            if (res) {
+                var currenttime = new Date();
+                return res.status(200).json({ lastUpdate: currenttime.toISOString() });
+            } else {
+                console.log('lastUpdate: ' + currenttime.toISOString());
+            }
+        });
+
+        
     }
 }
 

@@ -10,8 +10,8 @@ module.exports = function(app) {
         project.setProject(req, res);
     })
 
-    app.get('/update', function(req, res) {
-        server.updateServer();
+    app.get('/forceupdate', function(req, res) {
+        server.updateServer(res);
     })
 
     app.get('/', function(req, res) {
