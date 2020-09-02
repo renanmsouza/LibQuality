@@ -16,7 +16,7 @@ class authenticationModel {
                 $gitPassword: obj.gitPassword
             }, (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(true);
                 }     
@@ -29,7 +29,7 @@ class authenticationModel {
             this.db.run('Delete from Authentication', [], 
             (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(true);
                 }     

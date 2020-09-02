@@ -1,3 +1,8 @@
+CREATE TABLE Authentication (
+  gitUser VARCHAR(100) NOT NULL,
+  gitPassword VARCHAR(100) NOT NULL
+);
+
 CREATE TABLE Owners (
   idOwners INTEGER NOT NULL,
   name VARCHAR(200) NULL,
