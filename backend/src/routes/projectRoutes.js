@@ -11,6 +11,10 @@ module.exports = function(app) {
         projects.search(req, res);           
     });
 
+    app.get('/projects/searchlog', function(req, res){
+        projects.listSearchLog(req, res);           
+    });
+
     app.post('/projects/add', function(req, res){
         projects.add(req, res);           
     });

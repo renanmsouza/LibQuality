@@ -117,6 +117,18 @@ class userModel {
             });
         })
     }
+
+    listAccessLog() {
+        return new Promise ((resolve, reject) => {
+            this.db.all('Select * from AccessLog', [] , (err, rows) => {
+                if (err) {
+                    console.log(err);
+                }else{
+                    resolve(rows);
+                }  
+            });
+        })
+    }
 }
 
 module.exports = userModel;

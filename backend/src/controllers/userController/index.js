@@ -16,6 +16,16 @@ class userController {
         }
     }
 
+    async listAccessLog(req, res) {
+        const result = await this.Users.listAccessLog();
+
+        if (!result.error) {
+            res.status(200).json({ result: result });
+        }else{
+            res.status(400).json({ result: result});
+        }
+    }
+
     async post(req, res) {
         const data = req.body;
 

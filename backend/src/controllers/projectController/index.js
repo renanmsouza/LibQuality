@@ -35,6 +35,16 @@ class projectController {
         }
     }
 
+    async listSearchLog(req, res) {
+        const result = await this.Projects.listSearchLog();
+
+        if (!result.error) {
+            res.status(200).json({ result: result });
+        }else{
+            res.status(400).json({ result: result});
+        }
+    }
+
     add(req, res) {
         const data = req.body;
 

@@ -53,6 +53,18 @@ class projectModel {
         })
     }
 
+    listSearchLog() {
+        return new Promise ((resolve, reject) => {
+            this.db.all('Select * from SearchLog', [] , (err, rows) => {
+                if (err) {
+                    console.log(err);
+                }else{
+                    resolve(rows);
+                }  
+            });
+        })
+    }
+
     async add(owner, project) {        
         try {
             await api.get(`/projects/add?owner=${owner}&project=${project}`);   

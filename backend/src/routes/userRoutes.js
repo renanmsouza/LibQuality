@@ -7,6 +7,10 @@ module.exports = function(app) {
         users.list(req, res);           
     });
 
+    app.get('/users/accesslog', function(req, res){
+        users.listAccessLog(req, res);           
+    });
+
     app.get('/users/get/:id', function(req, res){
         users.get(req, res);          
     });
