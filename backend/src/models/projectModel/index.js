@@ -36,7 +36,6 @@ class projectModel {
     }
 
     searchLog(obj) {
-        console.log(obj);
         return new Promise ((resolve, reject) => {
             this.db.run('Insert Into SearchLog Values(null, $idUsers, $query, $date)',
             {

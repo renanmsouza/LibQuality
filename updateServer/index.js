@@ -8,7 +8,9 @@ app.listen(3001, () => {
 
     const server = new serverController();
 
-    var inerval = 1000 * 60 * 5;
+    // Set interval do Update all Projects
+    // miliseconds * seconds * minutes * hours
+    var inerval = 1000 * 60 * 60 * 12;
     setInterval( function() {
         server.updateServer(app.res);
     }, inerval);
