@@ -35,10 +35,10 @@ class projectController {
         }
     }
 
-    async add(req, res) {
+    add(req, res) {
         const data = req.body;
 
-        const result = await this.Projects.add(data.owner, data.project);
+        const result = this.Projects.add(data.owner, data.project);
         
         if (!result.error) {
             res.status(201).json({ result: 'success' });

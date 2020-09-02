@@ -15,7 +15,7 @@ class projectModel {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Projects', [] , (err, rows) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(rows);
                 }  
@@ -27,7 +27,7 @@ class projectModel {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Projects Where name Like $query', { $query: '%'+query+'%' } , (err, rows) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(rows);
                 }  
@@ -46,7 +46,7 @@ class projectModel {
             }, 
             (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(true);
                 }     
@@ -54,22 +54,21 @@ class projectModel {
         })
     }
 
-    add(owner, project) {        
+    async add(owner, project) {        
         try {
-            const result = api.get(`/projects/add?owner=${owner}&project=${project}`);  
-            console.log(result);  
+            await api.get(`/projects/add?owner=${owner}&project=${project}`);   
         } catch (err) {
-            return err;    
-        }finally{
-            return result;
+            return ({ error: err });    
         }
+
+        return [];
     }
 
     get(id) {
         return new Promise ((resolve, reject) => {
             this.db.get('Select * from Projects where idProjects = $id', { $id: id } ,(err, row) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(row);
                 }          
@@ -83,7 +82,7 @@ class projectModel {
                 $id: id
             }, (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(true);
                 }     

@@ -13,7 +13,7 @@ class statisticModel {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Statistics', [] , (err, rows) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(rows);
                 }  
@@ -25,7 +25,7 @@ class statisticModel {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Statistics where idProjects = $id', { $id: idProjects } ,(err, rows) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(rows);
                 }          
@@ -37,7 +37,7 @@ class statisticModel {
         return new Promise ((resolve, reject) => {
             this.db.get('Select * from Statistics where idProjects = $id Order by idStatistics DESC LIMIT 1', { $id: idProjects } ,(err, row) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(row);
                 }          

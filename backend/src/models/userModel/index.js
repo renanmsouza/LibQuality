@@ -13,7 +13,7 @@ class userModel {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Users', [] , (err, rows) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(rows);
                 }  
@@ -26,7 +26,7 @@ class userModel {
         return new Promise ((resolve, reject) => {
             this.db.get('Select * from Users where idUsers = $id', { $id: id } ,(err, row) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(row);
                 }          
@@ -47,7 +47,7 @@ class userModel {
                 $password: obj.password
             }, (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(true);
                 }     
@@ -63,7 +63,7 @@ class userModel {
                 $password: obj.password
             }, (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(true);
                 }     
@@ -77,7 +77,7 @@ class userModel {
                 $id: id
             }, (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(true);
                 }     
@@ -93,7 +93,7 @@ class userModel {
                 },
                 (err, row) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(row);
                 }          
@@ -110,7 +110,7 @@ class userModel {
             }, 
             (err) => {
                 if (err) {
-                    reject({ error: err });
+                    console.log(err);
                 }else{
                     resolve(true);
                 }     
