@@ -7,7 +7,6 @@ Access all the Sistem Analisis and Documentation in: `.\_documentation\`
 ## Installation
 
 * Clone LibQuality Repository;
-
 * Execute `npm install` in both api repositories;
   - `.\backend\`
   - `.\updateServer\`
@@ -33,6 +32,6 @@ Access all the Sistem Analisis and Documentation in: `.\_documentation\`
 
 ### Auto Update
 The **updateServer** will, by default, realize an update every 12 hous. You can call a `forceupdate` using the `Force Update` request,
-or can change the `Timer Variable` in project;
+or change the `Timer Variable` in project;
 
 > To chance the `Time Variable`, access `./updateServer/index.js`, and change the value of `var interval` in miliseconds;
