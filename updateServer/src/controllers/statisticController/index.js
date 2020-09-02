@@ -5,12 +5,13 @@ class staticController {
     constructor() {
         this.postList = [];
 
-        this.Statistics = new statisticModel();
-        this.Projects = new projectModel();
     }
 
     async calcStatistics () {
-        const projectList = await this.Projects.list();
+        const Statistics = new statisticModel();
+        const Projects = new projectModel();
+
+        const projectList = await Projects.list();
 
         for (let i = 0; i < projectList.length; i++) {
             var project = projectList[i];
@@ -21,15 +22,15 @@ class staticController {
             var avgIssueAge = 0;
             
             try{
-                totalClosedIssues = await this.Statistics.getTotalIssuesByState(project.idProjects, 'closed');
-                totalOpenedIssues = await this.Statistics.getTotalIssuesByState(project.idProjects, 'open');
+                totalClosedIssues = await Statistics.getTotalIssuesByState(project.idProjects, 'closed');
+                totalOpenedIssues = await Statistics.getTotalIssuesByState(project.idProjects, 'open');
     
-                const infoCloseIssues = await this.Statistics.getInfosClosedIssues(project.idProjects);
+                const infoCloseIssues = await Statistics.getInfosClosedIssues(project.idProjects);
     
                 avgIssueAge = (infoCloseIssues.TotalGap / infoCloseIssues.TotalRows);
     
                 //Calculating the Standard Deviation
-                const gapsIssues = await this.Statistics.listGapFromClosedIssues(project.idProjects);
+                const gapsIssues = await Statistics.listGapFromClosedIssues(project.idProjects);
     
                 for (let j = 0; j < gapsIssues.length; j++) {
                     let gapIssue = gapsIssues[j];
@@ -57,9 +58,11 @@ class staticController {
                 })
             }
         }
-
         // Post the Calculated Statistics List
-        const result = await this.Statistics.post(this.postList);
+        await Statistics.post(this.postList);
+
+        Statistics.destroy();
+        Projects.destroy();
     }
 }
 

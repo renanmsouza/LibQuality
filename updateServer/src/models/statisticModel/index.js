@@ -9,6 +9,10 @@ class statisticModel {
         });
     }
 
+    destroy() {
+        this.db.close();
+    }
+
     listByProject(idProjects) {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Statistics Where idProjects = $idProjects', 

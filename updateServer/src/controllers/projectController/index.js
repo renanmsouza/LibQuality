@@ -6,8 +6,6 @@ class projectController {
     constructor() {
         this.data = [];
 
-        this.Projects = new projectModel();
-        this.Owners = new ownerModel();
     }
 
     async setProject(req, res) {
@@ -27,10 +25,12 @@ class projectController {
             await this.updateOwner(this.data.owner);
             // Post or Update Project //
             await this.updateProject(this.data);
-        } 
+        }
     }
 
     async updateOwner(ownerData) {
+        const Owners = new ownerModel();
+
         // Create the new Object
         var newOwner = {
             idOwners: ownerData.id,
@@ -41,18 +41,23 @@ class projectController {
         };
 
         // Check if alread exists, if not, create a new one
-        const oldOwner = await this.Owners.get(ownerData.id) || [];
+        const oldOwner = await Owners.get(ownerData.id) || [];
         if (oldOwner.idOwners) {
             // if Exists and is diferente, make an update
             if (oldOwner !== newOwner) {
-                await this.Owners.set(newOwner)
+                await Owners.set(newOwner)
             }
         }else{
-            await this.Owners.post(newOwner);
+            await Owners.post(newOwner);
         }
+
+        Owners.destroy(); 
     }
 
     async updateProject(projectData) {
+        const Projects = new projectModel();
+        const Owners = new ownerModel();
+
         // Create the new Object
         var newProject = {
             idProjects: projectData.id,
@@ -63,15 +68,18 @@ class projectController {
         };
 
         // Check if alread exists, if not, create a new one
-        const oldProject = await this.Owners.get(projectData.id) || [];
+        const oldProject = await Owners.get(projectData.id) || [];
         if (oldProject.idProjects) {
             // if Exists and is diferente, make an update
             if (oldProject !== newProject) {
-                await this.Projects.set(newProject)
+                await Projects.set(newProject)
             }
         }else{
-            await this.Projects.post(newProject);
+            await Projects.post(newProject);
         }
+
+        Owners.destroy(); 
+        Projects.destroy();
     }
 }
 

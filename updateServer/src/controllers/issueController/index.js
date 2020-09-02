@@ -12,16 +12,16 @@ class issueController {
         //Using Insert list for beter performance
         this.postIssuesList = [];
         this.postLabelsList = [];
-
-        this.Authentication = new authenticationModel();
-        this.Projects = new projectModel();
-        this.Owners = new ownerModel();
-        this.Issues = new issueModel();
     }
 
     async setIssues() {
-        const gitAuth = await this.Authentication.get();
-        const projectsList = await this.Projects.list();
+        const Authentication = new authenticationModel();
+        const Projects = new projectModel();
+        const Owners = new ownerModel();
+        const Issues = new issueModel();
+
+        const gitAuth = await Authentication.get();
+        const projectsList = await Projects.list();
 
         // Access all projects and update Issues information
         for (let i = 0; i < projectsList.length; i++) {
@@ -31,7 +31,7 @@ class issueController {
             //Set current project
             let project = projectsList[i];
             //Get the owner of current project
-            const owner = await this.Owners.get(project.idOwners);
+            const owner = await Owners.get(project.idOwners);
             //Set Conection Options
             try {
                 // Temporary lastPage value.
@@ -82,13 +82,19 @@ class issueController {
             }
 
             //Execute Insert of the Lists: Issues and Labels of Issues
-            await this.Issues.post(this.postIssuesList)
-                .then(await this.Issues.postLabel(this.postLabelsList));
+            await Issues.post(this.postIssuesList)
+                .then(await Issues.postLabel(this.postLabelsList));
             
         };
+
+        Authentication.destroy();
+        Projects.destroy(); 
+        Owners.destroy();
+        Issues.destroy();
     }
 
     async updateIssue(issueData, idProjects) {
+        const Issues = new issueModel();
         // Post or Update Issue
         var newIssue = {
             idIssues: issueData.id, 
@@ -104,25 +110,28 @@ class issueController {
         };
 
         // Check if alread exists, if not, put then in the Insert List
-        const oldIssue = await this.Issues.get(issueData.id) || [];
+        const oldIssue = await Issues.get(issueData.id) || [];
         if (oldIssue.idIssues) {
             // if Exists and is diferente, make an update
             if (oldIssue !== newIssue) {
-                await this.Issues.set(newIssue)
+                await Issues.set(newIssue)
             }
 
+            Issues.destroy();
             return [];
         }else{
             // await this.Issues.post(newIssue);
+            Issues.destroy();
             return newIssue;
         }
     }
 
     async updateLabels(issueData) {
+        const Issues = new issueModel();
         //Get list of Labels from API
         const newListLabels = issueData.labels;
         //Get the list os Labels in DB
-        const oldListLabels = await this.Issues.listLabels(issueData.id);
+        const oldListLabels = await Issues.listLabels(issueData.id);
 
         //Verify if same Labels are removed from API, deleting them fom DB
         for (let i = 0; i < oldListLabels.length; i++) {
@@ -131,7 +140,7 @@ class issueController {
             });
 
             if (!found) {
-                await this.Issues.delLabel(issueData.id, oldListLabels[i].idLabels);
+                await Issues.delLabel(issueData.id, oldListLabels[i].idLabels);
             }
         }
 
@@ -145,6 +154,8 @@ class issueController {
                 return { idIssues: issueData.id, idLabels: newListLabels[i].id }
             }
         }
+
+        Issues.destroy();
     }
 }
 

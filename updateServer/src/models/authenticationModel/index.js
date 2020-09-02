@@ -9,6 +9,10 @@ class authenticationModel {
         });
     }
 
+    destroy() {
+        this.db.close();
+    }
+
     get () {
         return new Promise ((resolve, reject) => {
             this.db.get('Select * from Authentication', [] , (err, rows) => {

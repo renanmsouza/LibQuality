@@ -9,6 +9,10 @@ class labelModel {
         });
     }
 
+    destroy() {
+        this.db.close();
+    }
+
     list () {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Labels', [] , (err, rows) => {

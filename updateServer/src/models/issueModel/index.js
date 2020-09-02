@@ -9,6 +9,10 @@ class issueModel {
         });
     }
 
+    destroy() {
+        this.db.close();
+    }
+
     list () {
         return new Promise ((resolve, reject) => {
             this.db.all('Select * from Issues', [] , (err, rows) => {

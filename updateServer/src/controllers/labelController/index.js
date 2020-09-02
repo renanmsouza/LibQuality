@@ -6,20 +6,20 @@ const ownerModel = require('../../models/ownerModel');
 class labelController {
     constructor() {
         this.data = [];
-
-        this.Labels = new labelModel();
-        this.Projects = new projectModel();
-        this.Owners = new ownerModel();
     }
 
     async setLabels() {
-        const projectsList = await this.Projects.list();
+        const Labels = new labelModel();
+        const Projects = new projectModel();
+        const Owners = new ownerModel();
+
+        const projectsList = await Projects.list();
         // Access all projects and update Labels information
         for (let i = 0; i < projectsList.length; i++) {
             //Set current project
             let project = projectsList[i];
             //Get the owner of current project
-            const owner = await this.Owners.get(project.idOwners);
+            const owner = await Owners.get(project.idOwners);
             //Set Host
             const host = `https://api.github.com/repos/${owner.name}/${project.name}/labels?per_page=100`;
             try {
@@ -38,9 +38,15 @@ class labelController {
                 }
             } 
         };
+
+        Labels.destroy();
+        Projects.destroy();
+        Owners.destroy();
     }
 
     async updateLabel(labelData, idProjects) {
+        const Labels = new labelModel();
+
         var newLabel = {
             idLabels: labelData.id, 
             idProjects: idProjects, 
@@ -51,15 +57,17 @@ class labelController {
         };
         
         // Check if alread exists, if not, create a new one
-        const oldLabel = await this.Labels.get(labelData.id) || [];
+        const oldLabel = await Labels.get(labelData.id) || [];
         if (oldLabel.idLabels) {
             // if Exists and is diferente, make an update
             if (oldLabel !== newLabel) {
-                await this.Labels.set(newLabel)
+                await Labels.set(newLabel)
             }
         }else{
-            await this.Labels.post(newLabel);
+            await Labels.post(newLabel);
         }
+
+        Labels.destroy();
     }
 }
 
