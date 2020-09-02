@@ -17,11 +17,10 @@ class serverController {
         .then(
             await this.Statistics.calcStatistics()
         ).then(function() {
+            var currenttime = new Date();
             if (res) {
-                var currenttime = new Date();
                 return res.status(200).json({ lastUpdate: currenttime.toISOString() });
             } else {
-                var currenttime = new Date();
                 console.log('lastUpdate: ' + currenttime.toISOString());
             }
         });

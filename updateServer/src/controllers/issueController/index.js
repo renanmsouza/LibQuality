@@ -54,8 +54,6 @@ class issueController {
                         // Real last page value from Headers
                         lastPage = parsedLink.last.page;
                     }
-
-                    console.log(page + '/' + lastPage);
             
                     page++;
                 } while(page <= 10);
