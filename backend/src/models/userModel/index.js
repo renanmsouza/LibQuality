@@ -83,7 +83,6 @@ class userModel {
                 }     
             });
         })
-        
     }
 
     auth(login) {

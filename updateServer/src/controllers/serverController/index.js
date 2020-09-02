@@ -21,6 +21,7 @@ class serverController {
                 var currenttime = new Date();
                 return res.status(200).json({ lastUpdate: currenttime.toISOString() });
             } else {
+                var currenttime = new Date();
                 console.log('lastUpdate: ' + currenttime.toISOString());
             }
         });

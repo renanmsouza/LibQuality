@@ -18,7 +18,6 @@ class authenticationModel {
                     resolve(rows);
                 }  
             });
-            
         })
         
     }
