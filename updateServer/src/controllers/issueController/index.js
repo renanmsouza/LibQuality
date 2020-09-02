@@ -127,7 +127,7 @@ class issueController {
         //Verify if same Labels are removed from API, deleting them fom DB
         for (let i = 0; i < oldListLabels.length; i++) {
             let found = newListLabels.some(function (newLabel) {
-                return newLabel.id === oldListLabels[i].idLabels;
+                return (newLabel.id === oldListLabels[i].idLabels && issueData.id === oldListLabels[i].idIssues);
             });
 
             if (!found) {
@@ -138,7 +138,7 @@ class issueController {
         //Verify the labels existence in DB or put them in the Insert List
         for (let i = 0; i < newListLabels.length; i++) {
             let found = oldListLabels.some(function (oldLabel) {
-                return oldLabel.idLabels === newListLabels[i].id;
+                return (oldLabel.idLabels === newListLabels[i].id && oldLabel.idIssues === issueData.id);
             });
 
             if (!found) {
